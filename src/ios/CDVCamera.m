@@ -692,6 +692,10 @@ static NSString* toBase64(NSData* data) {
 - (CDVPluginResult*)resultForVideo:(NSDictionary*)info
 {
     NSString* moviePath = [[info objectForKey:UIImagePickerControllerMediaURL] absoluteString];
+    // On iOS 13 the movie path becomes inaccessible, create and return a copy
+    if (IsAtLeastiOSVersion(@"13.0")) {
+        moviePath = [self createTmpVideo:[[info objectForKey:UIImagePickerControllerMediaURL] path]];
+    }
     return [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:moviePath];
 }
 
